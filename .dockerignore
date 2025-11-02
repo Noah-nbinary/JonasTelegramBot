@@ -1,0 +1,10 @@
+.env
+.git
+.gitignore
+README.md
+.vscode
+__pycache__
+*.pyc
+.venv
+TelegramBot-copy.py
+test.py

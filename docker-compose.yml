@@ -1,0 +1,8 @@
+services:
+  
+  provider-bot:
+    image: noahnbinary/provider-bot:trixie
+    container_name: provider-bot
+    restart: always
+    env_file:
+      - .env
