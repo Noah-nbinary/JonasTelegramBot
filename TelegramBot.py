@@ -18,8 +18,11 @@ jona_bot = bot_jona()
 # Datetime object
 date = datetime.datetime.now().date()
 
+# Last command var
+last_command = ''
+
 # Creating log file
-logging.basicConfig(filename='/app/logs',datefmt='',level=logging.INFO)
+#logging.basicConfig(filename='/app/logs',datefmt='',level=logging.INFO)
 
 help_info = '''
 Comandos:
@@ -75,34 +78,24 @@ def handle_response(text: str) -> str:
 
     processed_text = text.lower()
     args = processed_text.split()
+    global last_command
+
+    print(f"🔍 DEBUG: Received text: '{text}'")
+    print(f"🔍 DEBUG: Processed text: '{processed_text}'")
+    print(f"🔍 DEBUG: Args: {args}")
+    print(f"🔍 DEBUG: len(args): {len(args)}")
 
     # Friendly responses
     if 'hola' in processed_text:
+        last_command = processed_text
         if random.randint(1,12) == 8:
             return '🤨'
         return 'Hola! : )\n¿Cómo te puedo ayudar?'
 
-    if 'que tal' in processed_text or 'como estas' in processed_text:
-        frio = [10,11,12,1,2,3,4]
-        # Migrar todo esto a una libreria aparte para que no ocupe espacio aqui por favor
-        ##################################################################################
-        frio_responses = ['Bien!! Con mantita, deseando tomarme una sopita 😊',
-        'Aquí, con el frío que pide plan tranqui 🥶', 'Con ganas de que salga el sol, la verdad 🌞',
-        'Pensando en lo pronto que anochece, qué locura 🌆', 'Haciendome un cafecito calentito 🤤' ]
-        calor_responses = ['Con mucho calor!! Pero resistiendo 🫡', 'En modo supervivencia contra este horno 🥵',
-        'Aquí, entre el ventilador y el hielo ✌️', '¡Superbién! La primavera me carga las pilas ⚡']
-        helpful_responses = ['En que te puedo ayudar?', 'Con que necesitas ayuda?', 'Cuentame, que se te ha roto 🤨',
-        'Que te cuentas hoy?']
-        if date.month in frio:
-            return random.choice(frio_responses) + '\n' + random.choice(helpful_responses)
-        else:
-            return random.choice(calor_responses) + '\n' + random.choice(helpful_responses)
-    if 'cuentame algo' in processed_text:
-        responses = ['']
-        emoji_list = ['😊','🥶','🫡','✌️','🤤','🥵','🤨','🤧','😵']
-        return random.choice(responses) + ' ' + random.choice(emoji_list)
 
     if 'ahorros' in processed_text:
+
+        last_command = processed_text
     
         if len(args) > 2:
             return 'Usage: ahorros <amount>'
@@ -113,25 +106,29 @@ def handle_response(text: str) -> str:
 
 
         try:
-            jona_bot.change_value(1, value=args[1])
+            print(jona_bot.change_value(1, value=int(args[1])))
             return f'Ahorros actualizados a {jona_bot.total_ahorros} €'
 
         except:
+            print('something happened')
             return 'Usage: ahorros <amount>'
 
 
     if 'help' in processed_text or 'ayuda' in processed_text:
+        last_command = processed_text
         return help_info
 
     if 'info mes' in processed_text and len(args) == 2:
+        last_command = processed_text
         return jona_bot.display_info()
 
-    if '.' in processed_text:
-        return 'Esta funcionalidad esta en construcción jeje...'
+    if processed_text == '.':
+        return handle_response(last_command)
         ...
         # devolver con update.message.text el ultimo comando que se haya ejecutado
 
     return 'No me entero...'
+
 
 async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     message_type = update.message.chat.type
