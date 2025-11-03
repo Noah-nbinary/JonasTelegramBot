@@ -71,6 +71,7 @@ async def update_savings(update: Update, context: ContextTypes.DEFAULT_TYPE):
             await update.message.reply_text("Usage: /updatesavings <amount>")
 
 async def month_info(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    jona_bot.calculate_remaining_months()
     response = jona_bot.display_info()
     await update.message.reply_text(response)
 

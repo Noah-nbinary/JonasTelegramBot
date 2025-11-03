@@ -1,7 +1,8 @@
 services:
   
   provider-bot:
-    image: noahnbinary/provider-bot:trixie
+    image: noahnbinary/provider-bot:latest
+    pull_policy: always
     container_name: provider-bot
     restart: always
     env_file:
